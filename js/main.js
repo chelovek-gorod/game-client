@@ -70,7 +70,7 @@ document.addEventListener('keypress', (event) => {
 
 // CONNECTION
 
-const socketURL = 'ws://localhost:6789'; // 'wss://mars-chat-server.herokuapp.com' // 'ws://localhost:9000' 
+const socketURL = 'wss://mars-game-server.herokuapp.com' // 'ws://localhost:9000' 
 let SOCKET;
 
 function connection() {
