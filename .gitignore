@@ -1,0 +1,6 @@
+# sources
+*.psd
+*.cdr
+
+# git
+/.git
