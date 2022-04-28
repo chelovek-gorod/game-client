@@ -1,6 +1,6 @@
 'use strict'
 
-const client_version = 'CV-002 [28-04-2022]';
+const client_version = 'CV-004 [28-04-2022]';
 console.log('CLIENT', client_version);
 
 /*****************
@@ -88,7 +88,7 @@ animate();
  */
 
 document.addEventListener('keypress', (event) => {
-  if (connectionIs) sendMove(event.code);
+  if (connectionIs) sendUpdate(event.code);
 }, false);
 
 /*****************
@@ -105,15 +105,15 @@ function connection() {
 
   socket.onopen = function () {
     console.log('-- socket on open-- ');
-    socket.send(JSON.stringify({ action: 'firstConnect' }));
+    socket.send(JSON.stringify({ action: 'connect' }));
   };
   
   socket.onmessage = function (message) {
     let { action, data } = JSON.parse(message.data);
     switch (action) {
-      case 'firstConnect' :
+      case 'connect' :
         SOCKET = socket;
-        getConnectionStart(data);
+        getConnect(data);
         break;
       case 'update' : getUpdate(data); break;
       default : getWrongActionInResponse(action, data);
@@ -146,10 +146,10 @@ function connection() {
 }
 connection();
 
-function getConnectionStart(data) {
+function getConnect(data) {
   connectionId.innerText = data;
   myId = data;
-  SOCKET.send(JSON.stringify({ action: 'turn', data: {id: myId, direction: 0 } }));
+  SOCKET.send(JSON.stringify({ action: 'update', data: {id: myId, direction: 0 } }));
 }
 
 function getUpdate(data) {
@@ -159,11 +159,11 @@ function getUpdate(data) {
   else connectionIs = false;
 }
 
-function sendMove(code) {
+function sendUpdate(code) {
   switch(code) {
     //case 'KeyW' : SOCKET.send(JSON.stringify({ action: 'move', data: {p: myId, x: 0, y: -1 } })); break;
     //case 'KeyS' : SOCKET.send(JSON.stringify({ action: 'move', data: {p: myId, x: 0, y: 1 } })); break;
-    case 'KeyA' : SOCKET.send(JSON.stringify({ action: 'turn', data: {id: myId, direction: -1 } })); break;
-    case 'KeyD' : SOCKET.send(JSON.stringify({ action: 'turn', data: {id: myId, direction: 1 } })); break;
+    case 'KeyA' : SOCKET.send(JSON.stringify({ action: 'update', data: {id: myId, direction: -1 } })); break;
+    case 'KeyD' : SOCKET.send(JSON.stringify({ action: 'update', data: {id: myId, direction: 1 } })); break;
   }
 }
