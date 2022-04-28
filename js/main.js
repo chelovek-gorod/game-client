@@ -1,6 +1,6 @@
 'use strict'
 
-const client_version = 'CV-008 [28-04-2022]';
+const client_version = 'CV-010 [28-04-2022]';
 console.log('CLIENT', client_version);
 
 /*****************
