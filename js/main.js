@@ -1,8 +1,11 @@
 'use strict'
 
-const client_version = 'CV-000 [28-04-2022]';
+const client_version = 'CV-001 [28-04-2022]';
+console.log('CLIENT', client_version);
 
-// INTERFACE
+/*****************
+ *  INTERFACE
+ */
 
 const clientsCounter = document.getElementById('clientsCounter');
 const connectionId = document.getElementById('connectionId');
@@ -10,7 +13,9 @@ const connectionId = document.getElementById('connectionId');
 let connectionIs = false;
 let myId;
 
-// CANVAS
+/*****************
+ *  CANVAS
+ */
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
@@ -78,13 +83,19 @@ function animate() {
 
 animate();
 
-// CONTROLLERS
+/*****************
+ *  CONTROLLERS
+ */
 
+/*
 document.addEventListener('keypress', (event) => {
   if (connectionIs) sendMove(event.code);
 }, false);
+*/
 
-// CONNECTION
+/*****************
+ *  CONNECTION
+ */
 
 const socketURL = 'wss://mars-game-server.herokuapp.com' // 'ws://localhost:9000' 
 let SOCKET;
@@ -98,7 +109,7 @@ function connection() {
     console.log('-- socket on open-- ');
     socket.send(JSON.stringify({ action: 'firstConnect' }));
   };
-  /*
+  
   socket.onmessage = function (message) {
     let { action, data } = JSON.parse(message.data);
     switch (action) {
@@ -106,11 +117,11 @@ function connection() {
         SOCKET = socket;
         getConnectionStart(data);
         break;
-      case 'update' : getUpdate(data); break;
+      //case 'update' : getUpdate(data); break;
       default : getWrongActionInResponse(action, data);
     }
   };
-  */
+  
   socket.onclose = function(event) {
     if (event.wasClean) {
       console.group('-- socket on close --');
@@ -124,7 +135,7 @@ function connection() {
       console.log(' - ' + event);
       console.groupEnd();
     }
-    connection();
+    setTimeout(connection, 5000);
   };
   
   socket.onerror = function(error) {
