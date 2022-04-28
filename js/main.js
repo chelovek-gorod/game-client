@@ -10,8 +10,38 @@ console.log('CLIENT', client_version);
 const clientsCounter = document.getElementById('clientsCounter');
 const connectionId = document.getElementById('connectionId');
 
+const directionSpan = document.getElementById('directionSpan');
+
 let connectionIs = false;
 let myId;
+
+/*****************
+ *  CONTROLLERS
+ */
+
+ let toLeftIs = false;
+ let toRightIs = false;
+ let turnSpeed = 0.5;
+ let turnSize = 0;
+ 
+ document.addEventListener('keydown', (event) => {
+   switch(event.code) {
+     case 'KeyA' : toLeftIs = true; break;
+     case 'KeyD' : toRightIs = true; break;
+   }
+   
+ });
+
+ document.addEventListener('keyup', (event) => {
+  switch(event.code) {
+    case 'KeyA' : toLeftIs = false; break;
+    case 'KeyD' : toRightIs = false; break;
+    //
+    case 'KeyT' : turnSpeed += 0.5; console.log('turnSpeed =', turnSpeed); break;
+    case 'KeyY' : if (turnSpeed > 0.5) turnSpeed -= 0.5; console.log('turnSpeed =', turnSpeed); break;
+  }
+  
+});
 
 /*****************
  *  CANVAS
@@ -36,6 +66,7 @@ let planesArr = [];
 
 function drawPlane (id, image, frame, x, y, angle) {
   let frameY = (id == myId) ? 0 : planeHeight;
+  angle = (360 + angle) % 360;
   ctx.save();
   ctx.translate(x + planeHalfWidth, y + planeHalfHeight / 2);
   ctx.rotate(angle * Math.PI / 180);
@@ -49,6 +80,8 @@ const background = new Image();
 background.src = './src/images/map.jpg';
 
 function animate() {
+
+  if (toLeftIs != toRightIs) sendUpdate();
   
   ctx.clearRect(0, 0, C_WIDTH, C_HEIGHT);
 
@@ -70,18 +103,10 @@ function animate() {
 animate();
 
 /*****************
- *  CONTROLLERS
- */
-
-document.addEventListener('keypress', (event) => {
-  if (connectionIs) sendUpdate(event.code);
-}, false);
-
-/*****************
  *  CONNECTION
  */
 
-const socketURL = 'wss://mars-game-server.herokuapp.com' // 'ws://localhost:9000' 
+const socketURL = 'ws://192.168.100.51:6789'; //'wss://mars-game-server.herokuapp.com' // 'ws://localhost:6789' 
 let SOCKET;
 
 function connection() {
@@ -134,22 +159,21 @@ connection();
 
 function getConnect(data) {
   connectionId.innerText = data;
-  myId = data;
-  SOCKET.send(JSON.stringify({ action: 'update', data: {id: myId, direction: 0 } }));
+  myId = data; console.log('GET ID', data);
+  SOCKET.send(JSON.stringify({ action: 'update', data: { id: myId, direction: 0 } }));
 }
 
 function getUpdate(data) {
   planesArr = data;
   clientsCounter.innerText = planesArr.length;
+  let myPlane = data.find(client => client.id == myId);
+  myPlane.direction = (360 + myPlane.direction) % 360;
+  directionSpan.innerHTML = myPlane.direction;
   if (planesArr.length > 0) connectionIs = true;
   else connectionIs = false;
 }
 
-function sendUpdate(code) {
-  switch(code) {
-    //case 'KeyW' : SOCKET.send(JSON.stringify({ action: 'move', data: {p: myId, x: 0, y: -1 } })); break;
-    //case 'KeyS' : SOCKET.send(JSON.stringify({ action: 'move', data: {p: myId, x: 0, y: 1 } })); break;
-    case 'KeyA' : SOCKET.send(JSON.stringify({ action: 'update', data: {id: myId, direction: -1 } })); break;
-    case 'KeyD' : SOCKET.send(JSON.stringify({ action: 'update', data: {id: myId, direction: 1 } })); break;
-  }
+function sendUpdate() {
+  turnSize = toLeftIs ? -turnSpeed : turnSpeed;
+  SOCKET.send(JSON.stringify({ action: 'update', data: {id: myId, direction: turnSize } }));
 }
