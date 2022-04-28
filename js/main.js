@@ -1,6 +1,6 @@
 'use strict'
 
-const client_version = 'CV-005 [28-04-2022]';
+const client_version = 'CV-006 [28-04-2022]';
 console.log('CLIENT', client_version);
 
 /*****************
@@ -72,7 +72,7 @@ function animate() {
 
     drawPlane (image, 0, planeImage, x, y, player.direction);
 
-    planesArr.forEach( plane => drawPlane (plane.id, image, planeFrame, plane.x, plane.y, plane.direction) );
+    planesArr.forEach( plane => drawPlane (plane.id, planeImage, planeFrame, plane.x, plane.y, plane.direction) );
 
   }
 
