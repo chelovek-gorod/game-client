@@ -32,18 +32,6 @@ const planeHeight = 100;
 const planeHalfWidth = 50;
 const planeHalfHeight = 50;
 
-const START_X = C_WIDTH / 2;
-const START_Y = C_HEIGHT - planeHalfHeight;
-
-class Plane {
-  constructor (id) {
-    this.id = id;
-    this.x = START_X;
-    this.y = START_Y;
-    this.direction = 0;
-  }
-}
-
 let planesArr = [];
 
 function drawPlane (id, image, frame, x, y, angle) {
