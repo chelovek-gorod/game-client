@@ -1,6 +1,6 @@
 'use strict'
 
-const client_version = 'CV-001 [28-04-2022]';
+const client_version = 'CV-002 [28-04-2022]';
 console.log('CLIENT', client_version);
 
 /*****************
@@ -87,11 +87,9 @@ animate();
  *  CONTROLLERS
  */
 
-/*
 document.addEventListener('keypress', (event) => {
   if (connectionIs) sendMove(event.code);
 }, false);
-*/
 
 /*****************
  *  CONNECTION
@@ -117,7 +115,7 @@ function connection() {
         SOCKET = socket;
         getConnectionStart(data);
         break;
-      //case 'update' : getUpdate(data); break;
+      case 'update' : getUpdate(data); break;
       default : getWrongActionInResponse(action, data);
     }
   };
@@ -151,6 +149,7 @@ connection();
 function getConnectionStart(data) {
   connectionId.innerText = data;
   myId = data;
+  SOCKET.send(JSON.stringify({ action: 'turn', data: {id: myId, direction: 0 } }));
 }
 
 function getUpdate(data) {
