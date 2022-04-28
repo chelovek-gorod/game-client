@@ -5,7 +5,7 @@
 const clientsCounter = document.getElementById('clientsCounter');
 const connectionId = document.getElementById('connectionId');
 
-let gameIs = false;
+let connectionIs = false;
 let myId;
 
 // CANVAS
@@ -16,48 +16,62 @@ const ctx = canvas.getContext('2d');
 const C_WIDTH = canvas.width = 1200;
 const C_HEIGHT = canvas.height = 600;
 
-const p1 = new Image();
-p1.src = './src/images/p-1.png';
-p1.w = 200; // frame width
-p1.h = 300; // frame height
-p1.point_x = 50;
-p1.point_y = 50;
+const planeImage = new Image();
+planeImage.src = './src/images/planes.png';
 
-const p2 = new Image();
-p2.src = './src/images/p-2.png';
-p2.w = 200; // frame width
-p2.h = 300; // frame height
-p2.point_x = C_WIDTH - p2.w - 50;
-p2.point_y = C_HEIGHT - p2.h - 50;
+const planeFrames = 4;
+const planeWidth = 100;
+const planeHeight = 100;
+const planeHalfWidth = 50;
+const planeHalfHeight = 50;
 
-// let frame = 0;
+const START_X = C_WIDTH / 2;
+const START_Y = C_HEIGHT - planeHalfHeight;
 
+class Plane {
+  constructor (id) {
+    this.id = id;
+    this.x = START_X;
+    this.y = START_Y;
+    this.direction = 0;
+  }
+}
+
+let planesArr = [];
+
+function drawPlane (id, image, frame, x, y, angle) {
+  let frameY = (id == myId) ? 0 : planeHeight;
+  ctx.save();
+  ctx.translate(x + planeHalfWidth, y + planeHalfHeight / 2);
+  ctx.rotate(angle * Math.PI / 180);
+  ctx.translate(-(x + planeHalfWidth), -(y + planeHalfHeight));
+  ctx.drawImage(image, frame, frameY, planeWidth, planeHeight, x, y, planeWidth, planeHeight);
+  ctx.restore();
+}
+
+let frame = 0;
 const background = new Image();
 background.src = './src/images/earth.jpg';
 
 function animate() {
-    ctx.clearRect(0, 0, C_WIDTH, C_HEIGHT);
+  
+  ctx.clearRect(0, 0, C_WIDTH, C_HEIGHT);
+
+  let planeFrame = (frame % planeFrames) * planeWidth;
     
-    if (gameIs) {
+  if (connectionIs) {
 
-      ctx.drawImage(background,0,0);
+    ctx.drawImage(background,0,0);
 
-      ctx.drawImage(
-        p1,
-        0, 0, p1.w, p1.h,
-        p1.point_x, p1.point_y, p1.w, p1.h
-      );
+    drawPlane (image, 0, planeImage, x, y, player.direction);
 
-      ctx.drawImage(
-        p2,
-        0, 0, p2.w, p2.h,
-        p2.point_x, p2.point_y, p2.w, p2.h
-      );
+    planesArr.forEach( plane => drawPlane (plane.id, image, planeFrame, plane.x, plane.y, plane.direction) );
 
-    }
+  }
 
-    // frame++;
-    window.requestAnimationFrame(animate);
+  frame++;
+  window.requestAnimationFrame(animate);
+
 }
 
 animate();
@@ -65,7 +79,7 @@ animate();
 // CONTROLLERS
 
 document.addEventListener('keypress', (event) => {
-  if (myId < 2) sendMove(event.code);
+  if (connectionIs) sendMove(event.code);
 }, false);
 
 // CONNECTION
@@ -90,8 +104,7 @@ function connection() {
         SOCKET = socket;
         getConnectionStart(data);
         break;
-      case 'updateClientNumbers' : getUpdateClientNumbers(data); break;
-      case 'newMove' : getMove(data); break;
+      case 'update' : getUpdate(data); break;
       default : getWrongActionInResponse(action, data);
     }
   };
@@ -123,36 +136,24 @@ function connection() {
 connection();
 
 function getConnectionStart(data) {
-  console.group('-- connection ' + data);
   connectionId.innerText = data;
   myId = data;
 }
 
 function sendMove(code) {
   switch(code) {
-    case 'KeyW' : SOCKET.send(JSON.stringify({ action: 'move', data: {p: myId, x: 0, y: -1 } })); break;
-    case 'KeyS' : SOCKET.send(JSON.stringify({ action: 'move', data: {p: myId, x: 0, y: 1 } })); break;
-    case 'KeyA' : SOCKET.send(JSON.stringify({ action: 'move', data: {p: myId, x: -1, y: 0 } })); break;
-    case 'KeyD' : SOCKET.send(JSON.stringify({ action: 'move', data: {p: myId, x: 1, y: 0 } })); break;
+    //case 'KeyW' : SOCKET.send(JSON.stringify({ action: 'move', data: {p: myId, x: 0, y: -1 } })); break;
+    //case 'KeyS' : SOCKET.send(JSON.stringify({ action: 'move', data: {p: myId, x: 0, y: 1 } })); break;
+    case 'KeyA' : SOCKET.send(JSON.stringify({ action: 'turn', data: {id: myId, direction: -1 } })); break;
+    case 'KeyD' : SOCKET.send(JSON.stringify({ action: 'turn', data: {id: myId, direction: 1 } })); break;
   }
 }
 
-function getMove(data) {
-  console.log(data);
-  let { p, x, y } = data;
-  if (p == 1) {
-    p1.point_x += x;
-    p1.point_y += y;
-  } else {
-    p2.point_x += x;
-    p2.point_y += y;
-  }
-}
-
-function getUpdateClientNumbers(data) {
-  clientsCounter.innerText = data;
-  if (data > 1) gameIs = true;
-  else gameIs = false;
+function getUpdate(data) {
+  planesArr = data;
+  clientsCounter.innerText = planesArr.length;
+  if (data > 0) connectionIs = true;
+  else connectionIs = false;
 }
 
 ////////////////////////////////////////////////////////////
