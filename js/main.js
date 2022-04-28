@@ -140,6 +140,13 @@ function getConnectionStart(data) {
   myId = data;
 }
 
+function getUpdate(data) {
+  planesArr = data;
+  clientsCounter.innerText = planesArr.length;
+  if (planesArr.length > 0) connectionIs = true;
+  else connectionIs = false;
+}
+
 function sendMove(code) {
   switch(code) {
     //case 'KeyW' : SOCKET.send(JSON.stringify({ action: 'move', data: {p: myId, x: 0, y: -1 } })); break;
@@ -147,13 +154,6 @@ function sendMove(code) {
     case 'KeyA' : SOCKET.send(JSON.stringify({ action: 'turn', data: {id: myId, direction: -1 } })); break;
     case 'KeyD' : SOCKET.send(JSON.stringify({ action: 'turn', data: {id: myId, direction: 1 } })); break;
   }
-}
-
-function getUpdate(data) {
-  planesArr = data;
-  clientsCounter.innerText = planesArr.length;
-  if (data > 0) connectionIs = true;
-  else connectionIs = false;
 }
 
 ////////////////////////////////////////////////////////////
