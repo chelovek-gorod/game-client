@@ -51,7 +51,7 @@ function drawPlane (id, image, frame, x, y, angle) {
 
 let frame = 0;
 const background = new Image();
-background.src = './src/images/earth.jpg';
+background.src = './src/images/map.jpg';
 
 function animate() {
   
