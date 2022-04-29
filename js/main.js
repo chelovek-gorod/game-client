@@ -129,7 +129,7 @@ animate();
 // 'wss://mars-game-server.herokuapp.com'
 // 'ws://localhost:6789'
 // 'ws://192.168.100.51:6789'
-const socketURL = 'ws://localhost:6789';
+const socketURL = 'wss://mars-game-server.herokuapp.com';
 let SOCKET;
 
 function connection() {
