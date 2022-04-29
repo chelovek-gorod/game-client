@@ -1,6 +1,6 @@
 'use strict'
 
-const client_version = 'CV-013 [29-04-2022]';
+const client_version = 'CV-012-2 [29-04-2022]';
 console.log('CLIENT', client_version);
 
 /*****************
@@ -131,7 +131,7 @@ animate();
 // 'ws://localhost:6789'
 // 'ws://192.168.100.51:6789'
 // 'ws://192.168.0.122:6789'
-const socketURL = 'wss://192.168.0.122:6789';
+const socketURL = 'ws://192.168.0.122:6789';
 let SOCKET;
 
 function connection() {
