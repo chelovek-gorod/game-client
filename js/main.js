@@ -1,6 +1,6 @@
 'use strict'
 
-const client_version = 'CV-001 [4-05-2022]';
+const client_version = 'CV-002 [4-05-2022]';
 console.log('CLIENT', client_version);
 
 /*****************
@@ -31,7 +31,7 @@ const RAD = Math.PI / 180;
 // terns and turn speed
 let toLeftIs = false;
 let toRightIs = false;
-let turnSpeed = 0.5;
+let turnSpeed = 4.5; // 0.5 -- 1 -- 1.5 -- 2.5 -- 4.5
 
 // speed and acceleration
 let minSpeed = 1;
