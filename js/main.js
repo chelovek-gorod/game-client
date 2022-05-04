@@ -120,7 +120,7 @@ function animate() {
     planesArr.forEach( plane => drawPlane (planeImage, planeFrame, plane) );
   }
   
-  if ((farme % 60) === 0) {
+  if ((frame % 60) === 0) {
     console.log('updatesCounter', updatesCounter);
     updatesCounter = 0;
   }
