@@ -1,6 +1,6 @@
 'use strict'
 
-const client_version = 'CV-000 [4-05-2022]';
+const client_version = 'CV-001 [4-05-2022]';
 console.log('CLIENT', client_version);
 
 /*****************
@@ -18,6 +18,9 @@ let myId;
 
 //
 let updatesCounter = 0;
+
+let testArr = [];
+let collectTestDataSize = 30;
 
 /*****************
  *  CONTROLLERS
@@ -210,6 +213,15 @@ function getUpdate(data) {
   
   if (planesArr.length > 0) connectionIs = true;
   else connectionIs = false;
+  
+  if (testArr.length < collectTestDataSize) {
+    testArr.push({timeStamp: Date.now(), data: data});
+    if (testArr.length === collectTestDataSize) {
+      console.log('*** test data array ***');
+      console.log(testArr);
+      console.log('*** ***');
+    }
+  }
   
   updatesCounter++;
 }
