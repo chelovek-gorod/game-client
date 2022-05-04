@@ -16,6 +16,9 @@ const speedSpan = document.getElementById('speedSpan');
 let connectionIs = false;
 let myId;
 
+//
+let updatesCounter = 0;
+
 /*****************
  *  CONTROLLERS
  */
@@ -116,6 +119,11 @@ function animate() {
     let planeFrame = (frame % planeFrames) * planeWidth;
     planesArr.forEach( plane => drawPlane (planeImage, planeFrame, plane) );
   }
+  
+  if ((farme % 60) === 0) {
+    console.log('updatesCounter', updatesCounter);
+    updatesCounter = 0;
+  }
 
   frame++;
   window.requestAnimationFrame(animate);
@@ -131,7 +139,7 @@ animate();
 // 'ws://localhost:6789'
 // 'ws://192.168.100.51:6789'
 // 'ws://192.168.0.122:6789'
-const socketURL = 'ws://192.168.100.51:6789';
+const socketURL = 'wss://mars-game-server.herokuapp.com';
 let SOCKET;
 
 function connection() {
@@ -202,6 +210,8 @@ function getUpdate(data) {
   
   if (planesArr.length > 0) connectionIs = true;
   else connectionIs = false;
+  
+  updatesCounter++;
 }
 
 function sendUpdate(x, y, direction, speed) {
