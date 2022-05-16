@@ -327,7 +327,7 @@ function drawMissile(missile) {
   ctx.drawImage(missileImage, 0, 0, missileWidth, missileHeight, x - missileHalfWidth, y - missileHalfHeight, missileWidth, missileHeight);
   ctx.restore();
 
-  if (frame % 2 === 0) missileSmokeArr.push(new MissileSmoke(x, y));
+  missileSmokeArr.push(new MissileSmoke(x, y));
 }
 
 let frame = 0;
