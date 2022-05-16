@@ -368,6 +368,8 @@ function animate() {
 
   frame++;
   window.requestAnimationFrame(animate);
+
+  if (frame % 300 === 0) console.log('missiles in screen =', missilesArr.length);
 }
 animate();
 
