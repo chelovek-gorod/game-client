@@ -11,7 +11,9 @@ const propellerSound1 = new Audio();
 const propellerSound2 = new Audio();
 propellerSound1.src = propellerSound2.src = './src/sounds/propeller.mp3';
 
-document.body.onclick = function() {
+// document.body.onclick = startPlaneSound;
+
+function startPlaneSound () {
   propellerSound1.play();
   setTimeout(() => propellerSound2.play(), 9000);
 };
@@ -67,17 +69,7 @@ let accelerationIs = false;
 let slowdownIs = false;
 
 // missiles shut
-let missileReadyIs = true;
-let missilesAwaitLaunch = 0;
-let missileLaunchTimeout = 2000;
-
-function missileLaunch () {
-  missileReadyIs = false;
-  missilesAwaitLaunch++;
-  setTimeout(() => missileReadyIs = true, missileLaunchTimeout);
-}
-
-let myPlane;
+let missileLaunchIs = false;
 
 document.addEventListener('keydown', (event) => {
   switch(event.code) {
@@ -86,10 +78,10 @@ document.addEventListener('keydown', (event) => {
     case 'KeyW' : accelerationIs = true; break;
     case 'KeyS' : slowdownIs = true; break;
 
-    case 'ControlRight' : if (missileReadyIs) missileLaunch(); break;
-    case 'ShiftRight' : if (missileReadyIs) missileLaunch(); break;
-    case 'ControlLeft' : if (missileReadyIs) missileLaunch(); break;
-    case 'ShiftLeft' : if (missileReadyIs) missileLaunch(); break;
+    case 'ArrowLeft' : toLeftIs = true; break;
+    case 'ArrowRight' : toRightIs = true; break;
+    case 'ArrowUp' : accelerationIs = true; break;
+    case 'ArrowDown' : slowdownIs = true; break;
   }
 });
 
@@ -99,8 +91,16 @@ document.addEventListener('keyup', (event) => {
     case 'KeyD' : toRightIs = false; break;
     case 'KeyW' : accelerationIs = false; break;
     case 'KeyS' : slowdownIs = false; break;
+
+    case 'ArrowLeft' : toLeftIs = false; break;
+    case 'ArrowRight' : toRightIs = false; break;
+    case 'ArrowUp' : accelerationIs = false; break;
+    case 'ArrowDown' : slowdownIs = false; break;
+
+    case 'ControlRight' : missileLaunchIs = true; break;
+    case 'ControlLeft' : missileLaunchIs = true; break;
   }
-  console.log(event.code);
+  console.log('keypress', event.code);
 });
 
 /*****************
@@ -178,20 +178,23 @@ class Cloud {
   }
 };
 
-// constructor(type, img, speed, x, y)
-lowCloudsArr.push(new Cloud(64, 0, .2, 110, 0));
-lowCloudsArr.push(new Cloud(83, 1, .3, 990, 330));
-lowCloudsArr.push(new Cloud(64, 2, .5, 880, 550));
-lowCloudsArr.push(new Cloud(83, 3, .4, 330, 110));
-lowCloudsArr.push(new Cloud(64, 4, .2, 1200, 440));
-lowCloudsArr.push(new Cloud(83, 5, .3, 220, 220));
+function setClouds() {
+  // constructor(type, img, speed, x, y)
+  lowCloudsArr.push(new Cloud(64, 0, .2, 110, 0));
+  lowCloudsArr.push(new Cloud(83, 1, .3, 990, 330));
+  lowCloudsArr.push(new Cloud(64, 2, .5, 880, 550));
+  lowCloudsArr.push(new Cloud(83, 3, .4, 330, 110));
+  lowCloudsArr.push(new Cloud(64, 4, .2, 1200, 440));
+  lowCloudsArr.push(new Cloud(83, 5, .3, 220, 220));
 
-heighCloudsArr.push(new Cloud(83, 0, .5, 550, 385));
-heighCloudsArr.push(new Cloud(64, 1, .4, 1100, 165));
-heighCloudsArr.push(new Cloud(83, 2, .2, 440, 495));
-heighCloudsArr.push(new Cloud(64, 3, .3, 770, 275));
-heighCloudsArr.push(new Cloud(83, 4, .5, 0, 600));
-heighCloudsArr.push(new Cloud(64, 5, .4, 660, 55));
+  heighCloudsArr.push(new Cloud(83, 0, .5, 550, 385));
+  heighCloudsArr.push(new Cloud(64, 1, .4, 1100, 165));
+  heighCloudsArr.push(new Cloud(83, 2, .2, 440, 495));
+  heighCloudsArr.push(new Cloud(64, 3, .3, 770, 275));
+  heighCloudsArr.push(new Cloud(83, 4, .5, 0, 600));
+  heighCloudsArr.push(new Cloud(64, 5, .4, 660, 55));
+}
+setClouds();
 
 function getRandomInt(size) {
   return Math.floor(Math.random() * size);
@@ -308,6 +311,8 @@ function drawPlane (image, frame, plane) {
 function drawMissile(missile) {
   let { x, y, direction, speed } = missile;
 
+  missileSmokeArr.push(new MissileSmoke(x, y));
+
   let currentSpeed = speed * speedModifier;
 
   let angle = RAD * direction;
@@ -330,15 +335,14 @@ function drawMissile(missile) {
   missileSmokeArr.push(new MissileSmoke(x, y));
 }
 
+// ANIMATE 
+
 let frame = 0;
-const background = new Image();
-background.src = './src/images/map.jpg';
 
 function animate() {
   ctx.clearRect(0, 0, C_WIDTH, C_HEIGHT);
     
   if (connectionIs) {
-    //ctx.drawImage(background,0,0);
 
     timeStamp = Date.now();
     timeout = (lastUpdateTimeStamp) ? (timeStamp - lastUpdateTimeStamp) : 0;
@@ -368,8 +372,6 @@ function animate() {
 
   frame++;
   window.requestAnimationFrame(animate);
-
-  if (frame % 300 === 0) console.log('missiles in screen =', missilesArr.length);
 }
 animate();
 
@@ -456,11 +458,6 @@ function getUpdate(data) {
 function sendUpdate() {
   let directionChanging = (toLeftIs != toRightIs) ? (toLeftIs ? -1 : 1) : 0;
   let speedChanging = (accelerationIs != slowdownIs) ? (slowdownIs ? -1 : 1) : 0;
-  let missileLaunchIs = false;
-  if (missilesAwaitLaunch > 0) {
-    missileLaunchIs = true;
-    missilesAwaitLaunch--;
-  }
 
   if (directionChanging !== 0 || speedChanging !== 0 || missileLaunchIs) {
     SOCKET.send(JSON.stringify({ action: 'update',
@@ -472,6 +469,8 @@ function sendUpdate() {
         missileLaunchIs : missileLaunchIs
       }
     }));
+
+    if (missileLaunchIs) missileLaunchIs = false;
   }
 }
 
