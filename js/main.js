@@ -211,8 +211,8 @@ let smokeArr = [];
 
 class Smoke {
   constructor(x, y) {
-    this.x = (x - 16.5) | 0;  
-    this.y = (y - 16.5) | 0;
+    this.x = (x - 15.5) | 0;  
+    this.y = (y - 15.5) | 0;
     this.frameX = 0;
     this.frameY = 0;
     this.maxFrameX = smokeWidth * smokeStepsX;
@@ -246,8 +246,8 @@ let missileSmokeArr = [];
 
 class MissileSmoke {
   constructor(x, y) {
-    this.x = (x - 8.5) | 0;  
-    this.y = (y - 8.5) | 0;
+    this.x = (x - 7.5) | 0;  
+    this.y = (y - 7.5) | 0;
     this.frameX = 0;
     this.frameY = 0;
     this.maxFrameX = missileSmokeWidth * missileSmokeStepsX;
