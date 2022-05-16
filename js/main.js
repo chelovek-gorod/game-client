@@ -256,13 +256,12 @@ class MissileSmoke {
 
   draw() {
     ctx.drawImage(missileSmokeImage, this.frameX, this.frameY, missileSmokeWidth, missileSmokeHeight, this.x, this.y, missileSmokeWidth, missileSmokeHeight);
-    if (frame % 2 === 0) {
-      this.frameX += missileSmokeWidth;
 
-      if (this.frameX === this.maxFrameX) {
-        this.frameX = 0;
-        this.frameY += missileSmokeHeight;
-      }
+    this.frameX += missileSmokeWidth;
+
+    if (this.frameX === this.maxFrameX) {
+      this.frameX = 0;
+      this.frameY += missileSmokeHeight;
     }
   }
 };
@@ -303,7 +302,7 @@ function drawPlane (image, frame, plane) {
     mySpeed = speed;
   }
 
-  if (frame % 2 === 0) smokeArr.push(new Smoke(x, y));
+  smokeArr.push(new Smoke(x, y));
 }
 
 function drawMissile(missile) {
@@ -325,7 +324,7 @@ function drawMissile(missile) {
   ctx.translate(x, y);
   ctx.rotate(direction * RAD);
   ctx.translate(-(x), -(y));
-  ctx.drawImage(image, 0, 0, missileWidth, missileHeight, x - missileHalfWidth, y - missileHalfHeight, missileWidth, missileHeight);
+  ctx.drawImage(missileImage, 0, 0, missileWidth, missileHeight, x - missileHalfWidth, y - missileHalfHeight, missileWidth, missileHeight);
   ctx.restore();
 
   if (frame % 2 === 0) missileSmokeArr.push(new MissileSmoke(x, y));
