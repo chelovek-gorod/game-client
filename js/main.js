@@ -381,7 +381,7 @@ animate();
 // 'ws://localhost:6789'
 // 'ws://192.168.100.51:6789'
 // 'ws://192.168.0.122:6789'
-const socketURL = 'wss://mars-server-euro.herokuapp.com';
+const socketURL = 'wss://mars-game-server.herokuapp.com';
 let SOCKET;
 
 // user key generator
@@ -445,6 +445,7 @@ function getConnect(data) {
 
 function getUpdate(data) {
   planesArr = data.planesArr;
+  missilesArr = data.missilesArr;
   lastUpdateTimeStamp = Date.now() - data.timeout;
 
   if (planesArr.length > 0) connectionIs = true;
