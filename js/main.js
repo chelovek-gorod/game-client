@@ -350,22 +350,22 @@ function animate() {
 
     lowCloudsArr.forEach( cloud => cloud.draw() );
 
-    missileSmokeArr.forEach( missileSmoke => missileSmoke.draw() );
     missileSmokeArr = missileSmokeArr.filter(item => item.frameY < item.maxFrameY);
+    missileSmokeArr.forEach( missileSmoke => missileSmoke.draw() );
 
     missilesArr.forEach( missile => drawMissile(missile) );
 
-    smokeArr.forEach( smoke => smoke.draw() );
     smokeArr = smokeArr.filter(item => item.frameY < item.maxFrameY);
+    smokeArr.forEach( smoke => smoke.draw() );
 
     let planeFrame = (frame % planeFrames) * planeWidth;
     planesArr.forEach( plane => drawPlane (planeImage, planeFrame, plane) );
 
     heighCloudsArr.forEach( cloud => cloud.draw() );
 
-    if (frame % 6 == 0) {
+    if (frame % 12 == 0) {
       clientsCounter.innerText = planesArr.length;
-      directionSpan.innerHTML = myDirection;
+      directionSpan.innerHTML = Math.round((360 + myDirection) % 360);
       speedSpan.innerHTML = Math.round(mySpeed * speedCountK);
     }
   }
