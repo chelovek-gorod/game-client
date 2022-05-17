@@ -222,7 +222,7 @@ function setClouds() {
   heighCloudsArr.push(new Cloud(83, 4, 0.5, 0, 600));
   heighCloudsArr.push(new Cloud(64, 5, 0.4, 660, 55));
 }
-// setClouds();
+setClouds();
 
 function getRandomInt(size) {
   return Math.floor(Math.random() * size);
@@ -242,8 +242,8 @@ let smokeArr = [];
 
 class Smoke {
   constructor(x, y) {
-    this.x = (x - 15.5) | 0;  
-    this.y = (y - 15.5) | 0;
+    this.x = x - 16; // (x - 15.5) | 0;  
+    this.y = y - 16; // (y - 15.5) | 0;
     this.frameX = 0;
     this.frameY = 0;
     this.maxFrameX = smokeWidth * smokeStepsX;
@@ -277,8 +277,8 @@ let missileSmokeArr = [];
 
 class MissileSmoke {
   constructor(x, y) {
-    this.x = (x - 7.5) | 0;  
-    this.y = (y - 7.5) | 0;
+    this.x = x - 8; //(x - 7.5) | 0;  
+    this.y = y - 8; // (y - 7.5) | 0;
     this.frameX = 0;
     this.frameY = 0;
     this.maxFrameX = missileSmokeWidth * missileSmokeStepsX;
@@ -310,10 +310,10 @@ function drawPlane (plane, frame) {
   /*
   x = ~~ (0.5 + x);
   y = ~~ (0.5 + y);
-  */
+  
   x = (0.5 + x) | 0;
   y = (0.5 + y) | 0;
-
+  */
   if (x > (planeWidthWithC)) x -= planeWidthWithC;
   else if (x < -planeWidth) x += planeWidthWithC;
 
@@ -333,7 +333,7 @@ function drawPlane (plane, frame) {
   ctx.drawImage(planeImage, frame, frameY, planeWidth, planeHeight, x - planeHalfWidth, y - planeHalfHeight, planeWidth, planeHeight);
   ctx.restore();
 
-  //smokeArr.push(new Smoke(x, y));
+  smokeArr.push(new Smoke(x, y));
 }
 
 function drawMissile(missile) {
@@ -348,10 +348,10 @@ function drawMissile(missile) {
   /*
   x = ~~ (0.5 + x);
   y = ~~ (0.5 + y);
-  */
+  
   x = (0.5 + x) | 0;
   y = (0.5 + y) | 0;
-
+  */
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(angle);
@@ -359,7 +359,7 @@ function drawMissile(missile) {
   ctx.drawImage(missileImage, 0, 0, missileWidth, missileHeight, x - missileHalfWidth, y - missileHalfHeight, missileWidth, missileHeight);
   ctx.restore();
 
-  //missileSmokeArr.push(new MissileSmoke(x, y));
+  missileSmokeArr.push(new MissileSmoke(x, y));
 }
 
 // ANIMATE 
