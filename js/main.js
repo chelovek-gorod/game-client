@@ -13,8 +13,8 @@ function test() {
   let time = Date.now();
   if (testTimeStamp) testArr.push(time - testTimeStamp);
   testTimeStamp = time;
-  if (testArr > 1000) {
-    let testArrSize = testArr.length;
+  let testArrSize = testArr.length;
+  if (testArrSize > 10000) {
     let min = testArr[0];
     let max = min;
     let sum = 0;
