@@ -309,15 +309,14 @@ function drawPlane (image, frame, plane) {
 }
 
 function drawMissile(missile) {
-  let { x, y, direction, speed } = missile;
+  let { x, y, angle, angleX, angleY speed } = missile;
 
   missileSmokeArr.push(new MissileSmoke(x, y));
 
   let currentSpeed = speed * speedModifier;
 
-  let angle = RAD * direction;
-  x += Math.cos(angle) * currentSpeed;
-  y += Math.sin(angle) * currentSpeed;
+  x += angleX * currentSpeed;
+  y += angleY * currentSpeed;
   /*
   x = ~~ (0.5 + x);
   y = ~~ (0.5 + y);
@@ -327,7 +326,7 @@ function drawMissile(missile) {
 
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(direction * RAD);
+  ctx.rotate(angle);
   ctx.translate(-(x), -(y));
   ctx.drawImage(missileImage, 0, 0, missileWidth, missileHeight, x - missileHalfWidth, y - missileHalfHeight, missileWidth, missileHeight);
   ctx.restore();
