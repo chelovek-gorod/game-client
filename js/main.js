@@ -4,6 +4,31 @@ const client_version = 'CV-000 [17-05-2022]';
 console.log('CLIENT', client_version);
 
 /*****************
+ *  TEST
+ */
+let testArr = [];
+let testTimeStamp;
+
+function test() {
+  let time = Date.now();
+  if (testTimeStamp) testArr.push(time - testTimeStamp);
+  testTimeStamp = time;
+  if (testArr > 1000) {
+    let testArrSize = testArr.length;
+    let min = testArr[0];
+    let max = min;
+    let sum = 0;
+    for (let i = 0; i < testArrSize; i++) {
+      if (testArr[i] > max) max = testArr[i];
+      if (testArr[i] < min) min = testArr[i];
+      sum += testArr[i];
+    }
+    console.log(`TEST: min = ${min}; mid = ${Math.ceil(sum / testArrSize)}; max = ${max}`);
+    testArr = [];
+  }
+}
+
+/*****************
  *  MUSIC
  */
 
@@ -452,6 +477,8 @@ function getUpdate(data) {
   planesArr = data.planesArr;
   missilesArr = data.missilesArr;
   lastUpdateTimeStamp = Date.now() - data.timeout;
+
+  test();
 
   if (planesArr.length > 0) connectionIs = true;
   else connectionIs = false;
