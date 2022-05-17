@@ -197,7 +197,7 @@ function setClouds() {
   heighCloudsArr.push(new Cloud(83, 4, 0.5, 0, 600));
   heighCloudsArr.push(new Cloud(64, 5, 0.4, 660, 55));
 }
-setClouds();
+// setClouds();
 
 function getRandomInt(size) {
   return Math.floor(Math.random() * size);
@@ -308,7 +308,7 @@ function drawPlane (plane, frame) {
   ctx.drawImage(planeImage, frame, frameY, planeWidth, planeHeight, x - planeHalfWidth, y - planeHalfHeight, planeWidth, planeHeight);
   ctx.restore();
 
-  smokeArr.push(new Smoke(x, y));
+  //smokeArr.push(new Smoke(x, y));
 }
 
 function drawMissile(missile) {
@@ -334,7 +334,7 @@ function drawMissile(missile) {
   ctx.drawImage(missileImage, 0, 0, missileWidth, missileHeight, x - missileHalfWidth, y - missileHalfHeight, missileWidth, missileHeight);
   ctx.restore();
 
-  missileSmokeArr.push(new MissileSmoke(x, y));
+  //missileSmokeArr.push(new MissileSmoke(x, y));
 }
 
 // ANIMATE 
