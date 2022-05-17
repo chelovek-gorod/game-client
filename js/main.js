@@ -1,6 +1,6 @@
 'use strict'
 
-const client_version = 'CV-019 [14-05-2022]';
+const client_version = 'CV-000 [17-05-2022]';
 console.log('CLIENT', client_version);
 
 /*****************
@@ -384,7 +384,7 @@ animate();
 // 'ws://localhost:6789'
 // 'ws://192.168.100.51:6789'
 // 'ws://192.168.0.122:6789'
-const socketURL = 'wss://mars-server-euro.herokuapp.com';
+const socketURL = 'wss://mars-game-server.herokuapp.com';
 let SOCKET;
 
 // user key generator
