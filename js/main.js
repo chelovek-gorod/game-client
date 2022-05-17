@@ -59,7 +59,7 @@ let toRightIs = false;
 let turnSpeed = 0.5; // 0.5 -- 1 -- 1.5 -- 2.5 -- 4.5
 
 // speed and acceleration
-let speedCountK = 100;
+let RealSpeedRatio = 100;
 let minSpeed = 1;
 let cruiseSpeed = 2;
 let maxSpeed = 4;
@@ -124,6 +124,9 @@ const planeHeight = 100;
 const planeHalfWidth = 50;
 const planeHalfHeight = 50;
 
+const planeWidthWithC = C_WIDTH + planeWidth;
+const planeHeightWithC = C_HEIGHT + planeHeight;
+
 let planesArr = [];
 
 // MISSILE
@@ -180,19 +183,19 @@ class Cloud {
 
 function setClouds() {
   // constructor(type, img, speed, x, y)
-  lowCloudsArr.push(new Cloud(64, 0, .2, 110, 0));
-  lowCloudsArr.push(new Cloud(83, 1, .3, 990, 330));
-  lowCloudsArr.push(new Cloud(64, 2, .5, 880, 550));
-  lowCloudsArr.push(new Cloud(83, 3, .4, 330, 110));
-  lowCloudsArr.push(new Cloud(64, 4, .2, 1200, 440));
-  lowCloudsArr.push(new Cloud(83, 5, .3, 220, 220));
+  lowCloudsArr.push(new Cloud(64, 0, 0.2, 110, 0));
+  lowCloudsArr.push(new Cloud(83, 1, 0.3, 990, 330));
+  lowCloudsArr.push(new Cloud(64, 2, 0.5, 880, 550));
+  lowCloudsArr.push(new Cloud(83, 3, 0.4, 330, 110));
+  lowCloudsArr.push(new Cloud(64, 4, 0.2, 1200, 440));
+  lowCloudsArr.push(new Cloud(83, 5, 0.3, 220, 220));
 
-  heighCloudsArr.push(new Cloud(83, 0, .5, 550, 385));
-  heighCloudsArr.push(new Cloud(64, 1, .4, 1100, 165));
-  heighCloudsArr.push(new Cloud(83, 2, .2, 440, 495));
-  heighCloudsArr.push(new Cloud(64, 3, .3, 770, 275));
-  heighCloudsArr.push(new Cloud(83, 4, .5, 0, 600));
-  heighCloudsArr.push(new Cloud(64, 5, .4, 660, 55));
+  heighCloudsArr.push(new Cloud(83, 0, 0.5, 550, 385));
+  heighCloudsArr.push(new Cloud(64, 1, 0.4, 1100, 165));
+  heighCloudsArr.push(new Cloud(83, 2, 0.2, 440, 495));
+  heighCloudsArr.push(new Cloud(64, 3, 0.3, 770, 275));
+  heighCloudsArr.push(new Cloud(83, 4, 0.5, 0, 600));
+  heighCloudsArr.push(new Cloud(64, 5, 0.4, 660, 55));
 }
 setClouds();
 
@@ -271,15 +274,14 @@ class MissileSmoke {
 
 // DRAW
 
-function drawPlane (image, frame, plane) {
-  let { id, x, y, direction, speed } = plane;
-  let frameY = (id != myId) ? planeHeight : 0;
+function drawPlane (plane, frame) {
+  let { id, x, y, direction, angle, angleX, angleY, speed } = plane;
+  let frameY = planeHeight;
 
   let currentSpeed = speed * speedModifier;
 
-  let angle = RAD * direction;
-  x += Math.cos(angle) * currentSpeed;
-  y += Math.sin(angle) * currentSpeed;
+  x += angleX * currentSpeed;
+  y += angleY * currentSpeed;
   /*
   x = ~~ (0.5 + x);
   y = ~~ (0.5 + y);
@@ -287,29 +289,30 @@ function drawPlane (image, frame, plane) {
   x = (0.5 + x) | 0;
   y = (0.5 + y) | 0;
 
-  if (x > (C_WIDTH + planeWidth)) x -= C_WIDTH + planeWidth;
-  else if (x < -planeWidth) x += C_WIDTH + planeWidth;
+  if (x > (planeWidthWithC)) x -= planeWidthWithC;
+  else if (x < -planeWidth) x += planeWidthWithC;
 
-  if (y > (C_HEIGHT + planeHeight)) y -= C_HEIGHT + planeWidth;
-  else if (y < -planeHeight) y += C_HEIGHT + planeWidth;
-  
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(direction * RAD);
-  ctx.translate(-(x), -(y));
-  ctx.drawImage(image, frame, frameY, planeWidth, planeHeight, x - planeHalfWidth, y - planeHalfHeight, planeWidth, planeHeight);
-  ctx.restore();
+  if (y > (planeHeightWithC)) y -= planeHeightWithC;
+  else if (y < -planeHeight) y += planeHeightWithC;
 
   if (id === myId) {
+    frameY = 0;
     myDirection = direction;
     mySpeed = speed;
   }
+  
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.translate(-(x), -(y));
+  ctx.drawImage(planeImage, frame, frameY, planeWidth, planeHeight, x - planeHalfWidth, y - planeHalfHeight, planeWidth, planeHeight);
+  ctx.restore();
 
   smokeArr.push(new Smoke(x, y));
 }
 
 function drawMissile(missile) {
-  let { x, y, angle, angleX, angleY speed } = missile;
+  let { x, y, angle, angleX, angleY, speed } = missile;
 
   missileSmokeArr.push(new MissileSmoke(x, y));
 
@@ -365,7 +368,7 @@ function animate() {
     if (frame % 12 == 0) {
       clientsCounter.innerText = planesArr.length;
       directionSpan.innerHTML = Math.round((360 + myDirection) % 360);
-      speedSpan.innerHTML = Math.round(mySpeed * speedCountK);
+      speedSpan.innerHTML = Math.round(mySpeed * RealSpeedRatio);
     }
   }
 
