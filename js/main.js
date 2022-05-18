@@ -277,7 +277,7 @@ let missileSmokeArr = [];
 
 class MissileSmoke {
   constructor(x, y) {
-    this.x = x - 8; //(x - 7.5) | 0;  
+    this.x = x - 8; // (x - 7.5) | 0;  
     this.y = y - 8; // (y - 7.5) | 0;
     this.frameX = 0;
     this.frameY = 0;
@@ -293,6 +293,40 @@ class MissileSmoke {
     if (this.frameX === this.maxFrameX) {
       this.frameX = 0;
       this.frameY += missileSmokeHeight;
+    }
+  }
+};
+
+// EXPLOSION
+
+const explosionImage = new Image();
+explosionImage.src = './src/images/explosion256_8x8.png';
+
+const explosionWidth = 256;
+const explosionHeight = 256;
+const explosionStepsX = 8;
+const explosionStepsY = 8;
+
+let explosionsArr = [];
+
+class Explosion {
+  constructor(x, y) {
+    this.x = x - 128; // (x - 127.5) | 0;  
+    this.y = y - 128; // (y - 127.5) | 0;
+    this.frameX = 0;
+    this.frameY = 0;
+    this.maxFrameX = explosionWidth * explosionStepsX;
+    this.maxFrameY = explosionHeight * explosionStepsY;
+  }
+
+  draw() {
+    ctx.drawImage(explosionImage, this.frameX, this.frameY, explosionWidth, explosionHeight, this.x, this.y, explosionWidth, explosionHeight);
+
+    this.frameX += explosionWidth;
+
+    if (this.frameX === this.maxFrameX) {
+      this.frameX = 0;
+      this.frameY += explosionHeight;
     }
   }
 };
@@ -374,6 +408,10 @@ function animate() {
     timeStamp = Date.now();
     timeout = (lastUpdateTimeStamp) ? (timeStamp - lastUpdateTimeStamp) : 0;
     speedModifier = timeout / updateTimeout;
+
+    if (frame % 300 == 0) explosionsArr.push( new Explosion(getRandomInt(C_WIDTH), getRandomInt(C_HEIGHT)) );
+    explosionsArr = explosionsArr.filter(item => item.frameY < item.maxFrameY);
+    explosionsArr.forEach( explosion => explosion.draw() );
 
     lowCloudsArr.forEach( cloud => cloud.draw() );
 
