@@ -407,10 +407,6 @@ function animate() {
     timeout = (lastUpdateTimeStamp) ? (timeStamp - lastUpdateTimeStamp) : 0;
     speedModifier = timeout / updateTimeout;
 
-    // if (frame % 300 == 0) explosionsArr.push( new Explosion(getRandomInt(C_WIDTH), getRandomInt(C_HEIGHT)) );
-    explosionsArr = explosionsArr.filter(item => item.frameY < item.maxFrameY);
-    explosionsArr.forEach( explosion => explosion.draw() );
-
     lowCloudsArr.forEach( cloud => cloud.draw() );
 
     missileSmokeArr = missileSmokeArr.filter(item => item.frameY < item.maxFrameY);
@@ -420,6 +416,9 @@ function animate() {
 
     smokeArr = smokeArr.filter(item => item.frameY < item.maxFrameY);
     smokeArr.forEach( smoke => smoke.draw() );
+
+    explosionsArr = explosionsArr.filter(item => item.frameY < item.maxFrameY);
+    explosionsArr.forEach( explosion => explosion.draw() );
 
     let planeFrame = (frame % planeFrames) * planeWidth;
     planesArr.forEach( plane => drawPlane (plane, planeFrame) );
