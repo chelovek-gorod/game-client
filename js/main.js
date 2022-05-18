@@ -329,6 +329,32 @@ class Explosion {
   }
 };
 
+// SPARKS
+
+const sparkImage = new Image();
+sparkImage.src = './src/images/sparks32.png';
+
+const sparkWidth = 32;
+const sparkHeight = 32;
+const sparkStepsX = 9;
+
+let sparksArr = [];
+
+class Spark {
+  constructor(x, y) {
+    this.x = x - 16; // (x - 127.5) | 0;  
+    this.y = y - 16; // (y - 127.5) | 0;
+    this.frameX = 0;
+    this.maxFrameX = explosionWidth * explosionStepsX;
+  }
+
+  draw() {
+    ctx.drawImage(sparkImage, this.frameX, 0, sparkWidth, sparkHeight, this.x, this.y, sparkWidth, sparkHeight);
+
+    this.frameX += sparkWidth;
+  }
+};
+
 // DRAW
 
 function drawPlane (plane, frame) {
@@ -424,6 +450,10 @@ function animate() {
     planesArr.forEach( plane => drawPlane (plane, planeFrame) );
 
     heighCloudsArr.forEach( cloud => cloud.draw() );
+
+    if (frame % 120 == 0) sparksArr.push(new Spark(getRandomInt(C_WIDTH), getRandomInt(C_HEIGHT))); 
+    sparksArr = sparksArr.filter(item => item.frameX < item.maxFrameX);
+    sparksArr.forEach( spark => spark.draw() );
 
     if (frame % 12 == 0) {
       clientsCounter.innerText = planesArr.length;
