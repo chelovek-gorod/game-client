@@ -514,7 +514,7 @@ function getConnect(data) {
 function getUpdate(data) {
   planesArr = data.planesArr;
   missilesArr = data.missilesArr;
-  explosionsArr = data.explosionsArr;
+  data.explosionsArr.forEach(explosion => explosionsArr.push(new Explosion(explosion.x, explosion.y)));
   lastUpdateTimeStamp = Date.now() - data.timeout;
 
   test();
