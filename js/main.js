@@ -1,6 +1,6 @@
 'use strict'
 
-const client_version = 'CV-000 [17-05-2022]';
+const client_version = 'CV-000 [18-05-2022]';
 console.log('CLIENT', client_version);
 
 /*****************
@@ -409,7 +409,7 @@ function animate() {
     timeout = (lastUpdateTimeStamp) ? (timeStamp - lastUpdateTimeStamp) : 0;
     speedModifier = timeout / updateTimeout;
 
-    if (frame % 300 == 0) explosionsArr.push( new Explosion(getRandomInt(C_WIDTH), getRandomInt(C_HEIGHT)) );
+    // if (frame % 300 == 0) explosionsArr.push( new Explosion(getRandomInt(C_WIDTH), getRandomInt(C_HEIGHT)) );
     explosionsArr = explosionsArr.filter(item => item.frameY < item.maxFrameY);
     explosionsArr.forEach( explosion => explosion.draw() );
 
@@ -514,6 +514,7 @@ function getConnect(data) {
 function getUpdate(data) {
   planesArr = data.planesArr;
   missilesArr = data.missilesArr;
+  explosionsArr = data.explosionsArr;
   lastUpdateTimeStamp = Date.now() - data.timeout;
 
   test();
