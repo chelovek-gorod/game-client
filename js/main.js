@@ -208,17 +208,17 @@ class Cloud {
 
 function setClouds() {
   // constructor(type, img, speed, x, y)
-  lowCloudsArr.push(new Cloud(64, 0, 0.2, 0, 0));
-  lowCloudsArr.push(new Cloud(64, 1, 0.3, 240, 120));
-  lowCloudsArr.push(new Cloud(64, 2, 0.5, 480, 240));
-  lowCloudsArr.push(new Cloud(64, 3, 0.4, 720, 360));
-  lowCloudsArr.push(new Cloud(64, 4, 0.2, 960, 480));
-  lowCloudsArr.push(new Cloud(64, 5, 0.3, 1200, 600));
+  lowCloudsArr.push(new Cloud(64, 0, 0.2, 0, 240));
+  lowCloudsArr.push(new Cloud(64, 1, 0.3, 240, 360));
+  lowCloudsArr.push(new Cloud(64, 2, 0.5, 480, 0));
+  lowCloudsArr.push(new Cloud(64, 3, 0.4, 720, 120));
+  lowCloudsArr.push(new Cloud(64, 4, 0.2, 960, 600));
+  lowCloudsArr.push(new Cloud(64, 5, 0.3, 1200, 480));
 
   heighCloudsArr.push(new Cloud(83, 0, 0.5, 120, 60));
-  heighCloudsArr.push(new Cloud(83, 1, 0.4, 360, 180));
+  heighCloudsArr.push(new Cloud(83, 1, 0.4, 360, 590));
   heighCloudsArr.push(new Cloud(83, 2, 0.2, 840, 420));
-  heighCloudsArr.push(new Cloud(83, 3, 0.3, 1180, 590));
+  heighCloudsArr.push(new Cloud(83, 3, 0.3, 1180, 180));
 }
 setClouds();
 
